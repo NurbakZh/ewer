@@ -21,7 +21,7 @@ HANGMAN_STAGES = (
   |
  /|\\
 -----------
-""",  """
+""", """
   -------
   |/    |
   |     O
@@ -31,7 +31,7 @@ HANGMAN_STAGES = (
   |
  /|\\
 -----------
-""",  """
+""", """
   -------
   |/    |
   |     O
@@ -41,7 +41,7 @@ HANGMAN_STAGES = (
   |
  /|\\
 -----------
-""",  """
+""", """
   -------
   |/    |
   |     O
@@ -108,7 +108,7 @@ def get_random_word():
 def splash_screen():
     """The splash screen."""
     print("""
-             _   _                                               ----- 
+             _   _                                               -----
             | | | | __ _ _ __   __ _ _ __ ___   __ _ _ __       |    o
             | |_| |/ _` | '_ \\ / _` | '_ ` _ \\ / _` | '_ \\      |   /|\\
             |  _  | (_| | | | | (_| | | | | | | (_| | | | |     |   / \\
@@ -117,6 +117,28 @@ def splash_screen():
     """)
     input("Press enter to continue...")
     clear_screen()
+
+
+def single_letter_check(guessed_letters):
+    while True:
+        guess = input("Guess a letter: ").lower()
+        if len(guess) == 1 and guess.isalpha():
+            # check if letter has already been guessed
+            if guess in guessed_letters:
+                print("You have already guessed that letter.")
+            else:
+                break
+        else:
+            print("Invalid guess. Please enter a single letter.")
+    return guess
+
+
+def add_guess_to_word(word, guess, guessed_word):
+    # add guess to guessed word
+    for i in range(len(word)):
+        if word[i] == guess:
+            guessed_word[i] = guess
+    return guessed_word
 
 
 def hangman():
@@ -150,26 +172,14 @@ def hangman():
                     break
 
                 # make sure player enters a single letter
-                while True:
-                    guess = input("Guess a letter: ").lower()
-                    if len(guess) == 1 and guess.isalpha():
-                        # check if letter has already been guessed
-                        if guess in guessed_letters:
-                            print("You have already guessed that letter.")
-                        else:
-                            break
-                    else:
-                        print("Invalid guess. Please enter a single letter.")
+                guess = single_letter_check(guessed_letters)
 
                 # add guess to guessed letters
                 guessed_letters.append(guess)
 
                 # check if guess is in word
                 if guess in word:
-                    # add guess to guessed word
-                    for i in range(len(word)):
-                        if word[i] == guess:
-                            guessed_word[i] = guess
+                    guessed_word = add_guess_to_word(word, guess, guessed_word)
                 else:
                     # increment wrong guesses
                     wrong_guesses += 1
