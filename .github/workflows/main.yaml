@@ -1,0 +1,24 @@
+name: lab-metrics
+
+# add your pipline description below
+on:
+  push:
+    paths:
+      - '*.py'
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-python@v4
+      with:
+        python-version: '3.12'
+    - name: Run image
+      uses: abatilo/actions-poetry@v2
+      with:
+        poetry-version: '1.7.1'
+    - name: Install dependencies
+      run: poetry install; poetry add flake8
+    - name: Run flake8
+      run: poetry run flake8
